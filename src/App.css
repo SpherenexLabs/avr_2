@@ -1,0 +1,293 @@
+/* App.css - Enhanced Dashboard Styling */
+
+/* Import modern font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* CSS Variables for consistent theming */
+:root {
+  /* Color palette */
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-tertiary: #94a3b8;
+  
+  /* Gradients */
+  --gradient-blue: linear-gradient(135deg, #60a5fa, #3b82f6);
+  --gradient-green: linear-gradient(135deg, #4ade80, #22c55e);
+  --gradient-orange: linear-gradient(135deg, #fb923c, #f97316);
+  --gradient-purple: linear-gradient(135deg, #c084fc, #a855f7);
+  --gradient-teal: linear-gradient(135deg, #2dd4bf, #14b8a6);
+  --gradient-red: linear-gradient(135deg, #f87171, #ef4444);
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  --shadow-hover: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+  
+  /* Animations */
+  --transition-normal: all 0.3s ease;
+  --transition-fast: all 0.15s ease;
+}
+
+/* Base styles and reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-primary);
+  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 20px 20px;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+  padding: 1rem;
+  overflow-x: hidden;
+}
+
+/* Dashboard container with subtle paper effect */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 1rem auto;
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  animation: fadeIn 0.5s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+}
+
+/* Dashboard header */
+.dashboard-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  position: relative;
+}
+
+.dashboard-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.025em;
+}
+
+.dashboard-subtitle {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* Card container: flex layout for metric cards */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+/* Basic card styling */
+.card {
+  position: relative;
+  padding: 1.25rem;
+  border-radius: 12px;
+  color: white;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  transition: var(--transition-normal);
+  overflow: hidden;
+  z-index: 1;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card-content {
+  position: relative;
+  z-index: 2;
+}
+
+.card-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.card-title {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-value-container {
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Glow effect */
+.card-glow {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  filter: blur(20px);
+  top: -20px;
+  right: -20px;
+  z-index: 1;
+}
+
+/* Empty state when no data is available */
+.empty-state {
+  background: rgba(0,0,0,0.02);
+  border: 2px dashed rgba(0,0,0,0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  grid-column: 1 / -1;
+  color: var(--text-secondary);
+}
+
+/* Charts container and card styling */
+.charts-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.chart-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-normal);
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chart-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.chart-title {
+  display: flex;
+  align-items: center;
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.chart-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  font-size: 0.75rem;
+  color: white;
+}
+
+.chart-container {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+}
+
+/* Loading animation */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(0,0,0,0.1);
+  border-radius: 50%;
+  border-top-color: #3b82f6;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 1rem;
+}
+
+/* Dashboard footer */
+.dashboard-footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  text-align: center;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  color: var(--text-tertiary);
+  font-size: 0.8rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+  
+  .dashboard-title {
+    font-size: 1.5rem;
+  }
+  
+  .cards-container {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  
+  .charts-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
