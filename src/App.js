@@ -140,7 +140,13 @@ export default function App() {
       if (values.length === 1) {
         chartValues = [values[0], { ...values[0], time: values[0].time + 1000 }];
       }
-      const labels = chartValues.map((d) => new Date(d.time).toLocaleTimeString());
+      // For 'line' key, use 'Pole 1', 'Pole 2', ... as labels
+      let labels;
+      if (key.toLowerCase() === 'line') {
+        labels = chartValues.map((_, idx) => `Pole ${idx + 1}`);
+      } else {
+        labels = chartValues.map((d) => new Date(d.time).toLocaleTimeString());
+      }
       const dataSet = chartValues.map((d) => d.value);
       const { bgGradient } = getCardStyle(key);
       const chartColor = bgGradient.includes('blue') ? '#42a5f5' : 
