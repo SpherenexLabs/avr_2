@@ -51,12 +51,15 @@ export default function App() {
           if (!updatedHistory[key]) {
             updatedHistory[key] = [];
           }
-          // Append new data point with a timestamp
+          // Ensure value is a number if possible
+          const numValue = isNaN(Number(value)) ? value : Number(value);
           updatedHistory[key] = [
             ...updatedHistory[key],
-            { time: Date.now(), value: value }
+            { time: Date.now(), value: numValue }
           ].slice(-20); // keep only the last 20 points
         });
+        // Debug: log updated history
+        console.log('Updated history:', updatedHistory);
         return updatedHistory;
       });
     });
@@ -131,24 +134,20 @@ export default function App() {
   const chartCards = Object.entries(history)
     .filter(([key]) => key.toLowerCase() !== 'system')
     .map(([key, values]) => {
-      // Skip empty history arrays
       if (!values || values.length === 0) return null;
-      
-      // Use actual timestamps for labels
-      const labels = values.map((d) => new Date(d.time).toLocaleTimeString());
-      const dataSet = values.map((d) => {
-        const num = parseFloat(d.value);
-        return isNaN(num) ? d.value : num;
-      });
-      
+      // If only one point, duplicate it to create a flat line
+      let chartValues = values;
+      if (values.length === 1) {
+        chartValues = [values[0], { ...values[0], time: values[0].time + 1000 }];
+      }
+      const labels = chartValues.map((d) => new Date(d.time).toLocaleTimeString());
+      const dataSet = chartValues.map((d) => d.value);
       const { bgGradient } = getCardStyle(key);
-      // Extract color from gradient for chart
       const chartColor = bgGradient.includes('blue') ? '#42a5f5' : 
                          bgGradient.includes('green') ? '#66bb6a' : 
                          bgGradient.includes('orange') ? '#ffa726' : 
                          bgGradient.includes('purple') ? '#ab47bc' :
                          bgGradient.includes('teal') ? '#26a69a' : '#f44336';
-      
       const chartData = {
         labels,
         datasets: [
@@ -157,15 +156,15 @@ export default function App() {
             data: dataSet,
             fill: true,
             borderColor: chartColor,
-            backgroundColor: `${chartColor}20`, // 20 = 12.5% opacity
+            backgroundColor: `${chartColor}20`,
             borderWidth: 2,
-            pointRadius: 3,
+            pointRadius: 4,
             pointBackgroundColor: chartColor,
             tension: 0.4,
+            showLine: true,
           },
         ],
       };
-      
       return (
         <div className="chart-card" key={`chart-${key}`}>
           <h3 className="chart-title">
