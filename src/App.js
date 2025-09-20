@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue } from 'firebase/database';
@@ -23,6 +21,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
+// Display helper: only change the visible name from "Line" → "Grid"
+const displayKey = (k) => (k?.toLowerCase() === 'line' ? 'GRID' : k);
+
 export default function App() {
   // Holds the latest values from the database
   const [data, setData] = useState({});
@@ -34,15 +35,15 @@ export default function App() {
   useEffect(() => {
     // Reference to the AVR node in your database
     const avrRef = ref(database, 'AVR2');
-    
+
     // Listen for realtime updates
     const unsubscribe = onValue(avrRef, (snapshot) => {
       const val = snapshot.val() || {};
-      
+
       // Save the latest values
       setData(val);
       setLoading(false);
-      
+
       // Update chart history for each key except 'Any'
       setHistory((prevHistory) => {
         const updatedHistory = { ...prevHistory };
@@ -63,7 +64,7 @@ export default function App() {
         return updatedHistory;
       });
     });
-    
+
     // Cleanup listener when component unmounts
     return () => unsubscribe();
   }, []);
@@ -71,7 +72,7 @@ export default function App() {
   // Card styles based on metric types
   const getCardStyle = (key) => {
     const keyLower = key.toLowerCase();
-    
+
     const styles = {
       line: {
         icon: '⚡',
@@ -98,7 +99,7 @@ export default function App() {
         bgGradient: 'var(--gradient-red)'
       }
     };
-    
+
     // Return specific style or default
     return styles[keyLower] || {
       icon: '📊',
@@ -111,16 +112,16 @@ export default function App() {
     .filter(([key]) => key.toLowerCase() !== 'any')
     .map(([key, value]) => {
       const { icon, bgGradient } = getCardStyle(key);
-      
+
       return (
-        <div 
+        <div
           className="card"
-          key={key} 
+          key={key}
           style={{ background: bgGradient }}
         >
           <div className="card-content">
             <span className="card-icon">{icon}</span>
-            <h2 className="card-title">{key}</h2>
+            <h2 className="card-title">{displayKey(key)}</h2>
             <div className="card-value-container">
               <p className="card-value">{value}</p>
             </div>
@@ -149,16 +150,16 @@ export default function App() {
       }
       const dataSet = chartValues.map((d) => d.value);
       const { bgGradient } = getCardStyle(key);
-      const chartColor = bgGradient.includes('blue') ? '#42a5f5' : 
-                         bgGradient.includes('green') ? '#66bb6a' : 
-                         bgGradient.includes('orange') ? '#ffa726' : 
+      const chartColor = bgGradient.includes('blue') ? '#42a5f5' :
+                         bgGradient.includes('green') ? '#66bb6a' :
+                         bgGradient.includes('orange') ? '#ffa726' :
                          bgGradient.includes('purple') ? '#ab47bc' :
                          bgGradient.includes('teal') ? '#26a69a' : '#f44336';
       const chartData = {
         labels,
         datasets: [
           {
-            label: key,
+            label: displayKey(key),
             data: dataSet,
             fill: true,
             borderColor: chartColor,
@@ -177,7 +178,7 @@ export default function App() {
             <span className="chart-icon" style={{ background: bgGradient }}>
               {getCardStyle(key).icon}
             </span>
-            {key} History
+            {displayKey(key)} History
           </h3>
           <div className="chart-container">
             <Line
@@ -255,7 +256,7 @@ export default function App() {
           <span className="dashboard-subtitle">Real-time Monitoring</span>
         </h1>
       </div>
-      
+
       {loading ? (
         <div className="loading-container">
           <div className="loading-spinner"></div>
@@ -270,7 +271,7 @@ export default function App() {
               </div>
             )}
           </div>
-          
+
           <div className="charts-container">
             {chartCards.length > 0 ? chartCards : (
               <div className="empty-state">
@@ -280,7 +281,7 @@ export default function App() {
           </div>
         </>
       )}
-      
+
       <div className="dashboard-footer">
         <p>Last updated: {new Date().toLocaleString()}</p>
       </div>
